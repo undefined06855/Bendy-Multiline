@@ -49,9 +49,19 @@ function exportSettings()
 }
 */
 
-function importSettings(importer)
+function fileDropped(ev)
 {
-    var f = importer.target.files[0]
+    console.log("File dropped...")
+
+    importSettings(ev, true)
+
+    ev.preventDefault()
+}
+
+function importSettings(importer, dragndrop)
+{
+    if   (dragndrop) var f = importer.dataTransfer.files[0]
+    else             var f = importer.target.files[0]
     if (!f) return
     var reader = new FileReader()
     reader.onload = e => {
@@ -85,6 +95,8 @@ class Line {
         this.line.frame = frame
         this.line.playing = playing
 
+        this.line.offset = Date.now() - frame
+
         console.log(this.line)
     }
     draw()
@@ -94,16 +106,15 @@ class Line {
           , change = this.line.change
           , dist = this.line.dist
           , size = this.line.size
+          , offset = this.line.offset
 
           , pl = []
         for (var i = 0; i < length; i++)
         {
             const p = new Point(0, i*dist, "point "+i, i*size)
             
-            if (playing)
-                var rot = Math.sin(Date.now() * (speed/300)) * (i*change*10)
-            else
-                var rot = Math.sin(file.line.frame * (speed/300)) * (i*change*10)
+            if (playing) var rot = Math.sin((Date.now()+offset) * (speed/300)) * (i*change*10)
+            else         var rot = Math.sin(file.line.frame * (speed/300)) * (i*change*10)
             const n = p.rotate(rot)
             
             
@@ -175,4 +186,3 @@ class Point {
         )
     }
 }
-

@@ -94,11 +94,18 @@ document.getElementById("zoom").addEventListener("input", () => {
     center.y = canvas.height / 2
 })
 
-
 document.getElementById("helpbtn").addEventListener("click", () => {
     console.log("good luck!")
     window.location.href = "https://github.com/undefined06855/Bendy-Multiline/blob/ad72306ba81510949b325ca9f6eac4eaaf8a9b6a/HELP.md"
 })
+
+document.getElementById("importbtn").addEventListener("dragover", ev => {
+    // janky stuff
+    ev.preventDefault()
+    ev.dataTransfer.effectAllowed = "all";
+    ev.dataTransfer.dropEffect = "copy";
+})
+document.getElementById("importbtn").addEventListener("drop", fileDropped)
 
 
 
